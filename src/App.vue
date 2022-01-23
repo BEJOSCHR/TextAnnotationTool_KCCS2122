@@ -1,6 +1,4 @@
 //TODO:
-//Filter mit dem screen scrollend machen
-//Document Filter (field mit nummer zur eingabe)
 //Percentage Filter (slider von 50 bis 100% und enable checkbox)
 //export into json datei
 <template>
@@ -26,7 +24,7 @@
         <button class="labelFilterButton" @click="()=>labelFilterAllUpdate(false)">All off</button>
       </div>
     </div>
-    <div class="surroundingContainer" style="top: 450px; padding-bottom: 3px">
+    <div class="surroundingContainer" style="top: 455px; padding-bottom: 3px">
       <div class="sortBox_Labels">
         <a style="ont-family: Bahnschrift;">Search for keyword: </a>
       </div>
@@ -36,7 +34,7 @@
         <button style="margin-left: 8px" @click="()=>keyWordUpdate(true)">Reset</button>
       </div>
     </div>
-    <div class="surroundingContainer" style="top: 545px; padding-bottom: 3px">
+    <div class="surroundingContainer" style="top: 555px; padding-bottom: 3px">
       <div class="sortBox_Labels">
         <a style="font-family: Bahnschrift;">Search for document: </a>
       </div>
@@ -44,6 +42,16 @@
         <input style="text-align: left; width: 50%;" placeholder="Enter doc number..." v-model="searchDocNumber" @keyup.enter="()=>docNumberUpdate(false)">
         <button style="margin-left: 8px" @click="()=>docNumberUpdate(false)">Search</button>
         <button style="margin-left: 8px" @click="()=>docNumberUpdate(true)">Reset</button>
+      </div>
+    </div>
+    <div class="surroundingContainer" style="top: 655px; padding-bottom: 3px">
+      <div class="sortBox_Labels" v-if="this.$submittedLabels.length !== 0">
+        <a style="font-family: Bahnschrift;">Submitted labels: {{this.$submittedLabels.length}}</a>
+        <button style="color:darkgreen; margin-right: 8px; float: right" @click="()=>saveFile()">Export</button>
+      </div>
+      <div class="sortBox_Labels" v-else>
+        <a style="font-family: Bahnschrift;">Submitted labels: {{this.$submittedLabels.length}}</a>
+        <button style="color:darkred; margin-right: 8px; float: right" @click="()=>saveFile()">Export</button>
       </div>
     </div>
     <transition name="fade">
@@ -77,6 +85,7 @@ export default {
       dataLoaded: false,
       minimumPercentage: 0.5,
       shownLabels: [],
+      exportedTimes: 1,
       scTimer: 0,
       scY: 0,
     }
@@ -89,6 +98,20 @@ export default {
     Vue.prototype.$shownLabels = this.shownLabels;
   },
   methods: {
+    saveFile() {
+      if(Vue.prototype.$submittedLabels.length !== 0) {
+        const data = JSON.stringify(Vue.prototype.$submittedLabels);
+        const blob = new Blob([data], {type: 'text/plain'});
+        const e = document.createEvent('MouseEvents');
+        const a = document.createElement('a');
+        a.download = "SubmittedLabels_"+this.exportedTimes+".json";
+        a.href = window.URL.createObjectURL(blob);
+        a.dataset.downloadurl = ['text/json', a.download, a.href].join(':');
+        e.initEvent('click', true, false);
+        a.dispatchEvent(e);
+        this.exportedTimes += 1;
+      }
+    },
     docNumberUpdate(reset) {
       if(reset === true) {
         Vue.prototype.$searchDocNumber = -1;

@@ -56,9 +56,9 @@ export default {
     submitLabel() {
       if(this.checkContent()) {
         let labelPos = this.percentage === 100 ? -1 : this.labelPos;
-        Vue.prototype.$submittedLabels.push( { index: this.index, text: this.text, label: this.labelPrediction, percentage: this.percentage, labelPos: labelPos} )
+        Vue.prototype.$submittedLabels.push( { index: this.index, text: this.text, label: this.labelPrediction, percentage: this.percentage, labelPos: labelPos, docNumber: this.documentNumber} )
         this.submitted = true;
-        console.log("Submited label "+this.index+" - "+this.text+" - "+this.labelPrediction+" # "+Vue.prototype.$submittedLabels);
+        this.$parent.$forceUpdate();
       }
     },
     checkContent() {
