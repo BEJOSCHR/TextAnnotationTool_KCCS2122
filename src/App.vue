@@ -28,7 +28,7 @@
     </div>
     <div class="surroundingContainer" style="top: 450px; padding-bottom: 3px">
       <div class="sortBox_Labels">
-        <a style="font-family: Bahnschrift;">Search for keyword: </a>
+        <a style="ont-family: Bahnschrift;">Search for keyword: </a>
       </div>
       <div class="sortBox_Labels">
         <input style="text-align: left; width: 50%;" placeholder="Enter keyword..." v-model="searchKeyWord" @keyup.enter="()=>keyWordUpdate(false)">
