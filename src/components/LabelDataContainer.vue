@@ -77,11 +77,17 @@ export default {
                 //THERE IS A DOC FILTER
                 if(this.documentNumber == Vue.prototype.$searchDocNumber) {
                   //THIS HAS THIS DOC NUMBER
-                  return true;
+                  if((this.percentage >= Vue.prototype.$percentageMin && this.percentage <= Vue.prototype.$percentageMax) || this.percentage == 100) {
+                    //IN PERCENTAGE RANGE OR BYPASS
+                    return true;
+                  }
                 }
               }else {
                 //NO DOC FILTER
-                return true;
+                if((this.percentage >= Vue.prototype.$percentageMin && this.percentage <= Vue.prototype.$percentageMax) || this.percentage == 100) {
+                  //IN PERCENTAGE RANGE OR BYPASS
+                  return true;
+                }
               }
             }
           }else {
@@ -90,6 +96,15 @@ export default {
               //THERE IS A DOC FILTER
               if(this.documentNumber == Vue.prototype.$searchDocNumber) {
                 //THIS HAS THIS DOC NUMBER
+                if((this.percentage >= Vue.prototype.$percentageMin && this.percentage <= Vue.prototype.$percentageMax) || this.percentage == 100) {
+                  //IN PERCENTAGE RANGE OR BYPASS
+                  return true;
+                }
+              }
+            }else {
+              //THERE IS NO DOC FILTER - DEFAULT if nothing is changed -> only percentage check
+              if((this.percentage >= Vue.prototype.$percentageMin && this.percentage <= Vue.prototype.$percentageMax) || (this.percentage == 100 && this.submitted == false)) {
+                //IN PERCENTAGE RANGE OR BYPASS
                 return true;
               }
             }
@@ -106,11 +121,17 @@ export default {
                   //THERE IS A DOC FILTER
                   if(this.documentNumber == Vue.prototype.$searchDocNumber) {
                     //THIS HAS THIS DOC NUMBER
-                    return true;
+                    if((this.percentage >= Vue.prototype.$percentageMin && this.percentage <= Vue.prototype.$percentageMax) || this.percentage == 100) {
+                      //IN PERCENTAGE RANGE OR BYPASS
+                      return true;
+                    }
                   }
                 }else {
                   //NO DOC FILTER
-                  return true;
+                  if((this.percentage >= Vue.prototype.$percentageMin && this.percentage <= Vue.prototype.$percentageMax) || this.percentage == 100) {
+                    //IN PERCENTAGE RANGE OR BYPASS
+                    return true;
+                  }
                 }
               }
             }else {
@@ -119,11 +140,17 @@ export default {
                 //THERE IS A DOC FILTER
                 if(this.documentNumber == Vue.prototype.$searchDocNumber) {
                   //THIS HAS THIS DOC NUMBER
-                  return true;
+                  if((this.percentage >= Vue.prototype.$percentageMin && this.percentage <= Vue.prototype.$percentageMax) || this.percentage == 100) {
+                    //IN PERCENTAGE RANGE OR BYPASS
+                    return true;
+                  }
                 }
               }else {
                 //NO DOC FILTER
-                return true;
+                if((this.percentage >= Vue.prototype.$percentageMin && this.percentage <= Vue.prototype.$percentageMax) || this.percentage == 100) {
+                  //IN PERCENTAGE RANGE OR BYPASS
+                  return true;
+                }
               }
             }
           }

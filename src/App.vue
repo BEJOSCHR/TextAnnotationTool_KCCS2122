@@ -45,6 +45,17 @@
       </div>
     </div>
     <div class="surroundingContainer" style="top: 655px; padding-bottom: 3px">
+      <div class="sortBox_Labels">
+        <a style="font-family: Bahnschrift;">Certainty filter: </a>
+      </div>
+      <div class="sortBox_Labels">
+        <input style="text-align: center; margin-right: 5px; width: 20%;" placeholder="Min" v-model="percentageMin" @keyup.enter="()=>percentageUpdate(false)">
+        <input style="text-align: center; margin-right: 5px; width: 20%;" placeholder="Max" v-model="percentageMax" @keyup.enter="()=>percentageUpdate(false)">
+        <button style="margin-left: 8px" @click="()=>percentageUpdate(false)">Apply</button>
+        <button style="margin-left: 8px" @click="()=>percentageUpdate(true)">Reset</button>
+      </div>
+    </div>
+    <div class="surroundingContainer" style="top: 755px; padding-bottom: 3px">
       <div class="sortBox_Labels" v-if="this.$submittedLabels.length !== 0">
         <a style="font-family: Bahnschrift;">Submitted labels: {{this.$submittedLabels.length}}</a>
         <button style="color:darkgreen; margin-right: 8px; float: right" @click="()=>saveFile()">Export</button>
@@ -81,9 +92,10 @@ export default {
     return{
       searchKeyWord: "",
       searchDocNumber: -1,
+      percentageMin: 50,
+      percentageMax: 51,
       inputData: [],
       dataLoaded: false,
-      minimumPercentage: 0.5,
       shownLabels: [],
       exportedTimes: 1,
       scTimer: 0,
@@ -118,6 +130,26 @@ export default {
         this.searchDocNumber = -1;
       }else {
         Vue.prototype.$searchDocNumber = this.searchDocNumber;
+      }
+      for (let i = 0; i < this.$children.length; i++) {
+        this.$children[i].$forceUpdate();
+      }
+    },
+    percentageUpdate(reset) {
+      if(reset === true) {
+        Vue.prototype.$percentageMin = 50;
+        Vue.prototype.$percentageMax = 51;
+        this.percentageMin = 50;
+        this.percentageMax = 51;
+      }else {
+        if(this.percentageMin < 0) {
+          this.percentageMin = 0;
+        }
+        if(this.percentageMax > 99) {
+          this.percentageMax = 99;
+        }
+        Vue.prototype.$percentageMin = this.percentageMin;
+        Vue.prototype.$percentageMax = this.percentageMax;
       }
       for (let i = 0; i < this.$children.length; i++) {
         this.$children[i].$forceUpdate();
