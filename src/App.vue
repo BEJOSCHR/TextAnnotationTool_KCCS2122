@@ -1,6 +1,4 @@
-//TODO:
-//Percentage Filter (slider von 50 bis 100% und enable checkbox)
-//export into json datei
+//This tool was programmed by Benjamin Schranner during the KCCS course at the BUW, Topic: Semi-automated Text-Annotation-Tool
 <template>
   <div id="app">
     <div>
@@ -26,7 +24,7 @@
     </div>
     <div class="surroundingContainer" style="top: 455px; padding-bottom: 3px">
       <div class="sortBox_Labels">
-        <a style="ont-family: Bahnschrift;">Search for keyword: </a>
+        <a style="font-family: Bahnschrift;">Search for keyword: </a>
       </div>
       <div class="sortBox_Labels">
         <input style="text-align: left; width: 50%;" placeholder="Enter keyword..." v-model="searchKeyWord" @keyup.enter="()=>keyWordUpdate(false)">
@@ -84,12 +82,14 @@ import LabelDataContainer from "@/components/LabelDataContainer";
 import Vue from "vue";
 
 export default {
+  //The filter are no separate components, just the TextParts are represented in the LabelDataContainer component
   name: 'App',
   components: {
     LabelDataContainer
   },
   data(){
     return{
+      //This are the localy set variables which are mostly used and changed by the filter system
       searchKeyWord: "",
       searchDocNumber: -1,
       percentageMin: 50,
@@ -102,14 +102,17 @@ export default {
       scY: 0,
     }
   },
+  //The scroll event is used to show or hide the 'back to the top' button
   mounted() {
     window.addEventListener('scroll', this.handleScroll);
   },
+  //At the start the input data is loaded and set to display
   created() {
     this.loadingData();
     Vue.prototype.$shownLabels = this.shownLabels;
   },
   methods: {
+    //This methode executes the export functionality using JSON and BLOB
     saveFile() {
       if(Vue.prototype.$submittedLabels.length !== 0) {
         const data = JSON.stringify(Vue.prototype.$submittedLabels);
@@ -124,6 +127,7 @@ export default {
         this.exportedTimes += 1;
       }
     },
+    //This is called if the doc filter is changed, to update the global variable
     docNumberUpdate(reset) {
       if(reset === true) {
         Vue.prototype.$searchDocNumber = -1;
@@ -135,6 +139,7 @@ export default {
         this.$children[i].$forceUpdate();
       }
     },
+    //This is called if the certainty filter is changed, to update the global border
     percentageUpdate(reset) {
       if(reset === true) {
         Vue.prototype.$percentageMin = 50;
@@ -155,6 +160,7 @@ export default {
         this.$children[i].$forceUpdate();
       }
     },
+    //This is called if the key word filter is changed, to update the global variable
     keyWordUpdate(reset) {
       if(reset === true) {
         Vue.prototype.$searchKeyWord = "";
@@ -166,17 +172,7 @@ export default {
         this.$children[i].$forceUpdate();
       }
     },
-    labelFilterAllUpdate(on) {
-      if(on === true) {
-        this.shownLabels = [-1, 0, 1, 2, 3, 4];
-      }else {
-        this.shownLabels = [];
-      }
-      Vue.prototype.$shownLabels = this.shownLabels;
-      for (let i = 0; i < this.$children.length; i++) {
-        this.$children[i].$forceUpdate();
-      }
-    },
+    //This is called if the label filter is changed, to update the global variable list
     labelFilterUpdate(pos) {
       if(this.shownLabels.includes(pos)) {
         this.shownLabels = this.shownLabels.filter(function(value) {
@@ -190,6 +186,19 @@ export default {
         this.$children[i].$forceUpdate();
       }
     },
+    //This is called if the label filter is changed at once, to update the global variable list and reset it
+    labelFilterAllUpdate(on) {
+      if(on === true) {
+        this.shownLabels = [-1, 0, 1, 2, 3, 4];
+      }else {
+        this.shownLabels = [];
+      }
+      Vue.prototype.$shownLabels = this.shownLabels;
+      for (let i = 0; i < this.$children.length; i++) {
+        this.$children[i].$forceUpdate();
+      }
+    },
+    //This handles the scroll event with a timer to slow the update down
     handleScroll() {
       if (this.scTimer) return;
       this.scTimer = setTimeout(() => {
@@ -198,12 +207,16 @@ export default {
         this.scTimer = 0;
       }, 100);
     },
+    //This is called to scroll back to the top of the screen
+    //This was added because you can the filter only change at the top
+    //and it was a lot of scrolling to get there sometimes
     toTop() {
       window.scrollTo({
         top: 0,
         behavior: "smooth"
       });
     },
+    //This is called at the start to load the input data from the json file
     loadingData() {
       console.log("Loading Data...");
       Vue.prototype.$inputData = DataSet;

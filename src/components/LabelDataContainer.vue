@@ -20,6 +20,7 @@ import Vue from "vue";
 
 let position, index;
 export default {
+  //Each container represents one text part with a related label, item is the data container given from the v-for loop
   name: "LabelDataContainer",
   props: {
     position,
@@ -30,11 +31,13 @@ export default {
     },
   },
   created() {
+    //called on create, and transfers the data from the item localy
     this.isTrained = this.item.is_trained;
     this.text = this.item.text;
     this.labelPos = this.getLabelPos(this.item.predictions);
     this.labelPrediction = this.$labels[this.labelPos];
     if(this.labelPos !== -1) {
+      //labelPos = -1 means no label prediction from the AI was given
       this.percentage = (this.item.logits[this.labelPos]*100).toFixed(2);
     }else {
       this.percentage = 0;
@@ -43,6 +46,7 @@ export default {
   },
   data() {
     return {
+      //The local data set from the item in create()
       isTrained: false,
       text: "",
       labelPos: 0,
@@ -53,7 +57,10 @@ export default {
     }
   },
   methods: {
+    //This methode is called if you press the submit button,
+    //here the represented text part is saved as submitted so it can later be exported
     submitLabel() {
+      //Only can be pressed if a label is entered in the text field
       if(this.checkContent()) {
         let labelPos = this.percentage === 100 ? -1 : this.labelPos;
         Vue.prototype.$submittedLabels.push( { index: this.index, text: this.text, label: this.labelPrediction, percentage: this.percentage, labelPos: labelPos, docNumber: this.documentNumber} )
@@ -61,9 +68,12 @@ export default {
         this.$parent.$forceUpdate();
       }
     },
+    //This methode checks if the entered label is set correctly
     checkContent() {
       return this.labelPrediction != null && this.labelPrediction !== "";
     },
+    //This is the main methode doing the filtering part,
+    //if it returns true this text part is displayed, if not it is false
     checkFilter() {
       if(this.isTrained !== 1) {
         //NO TRAIN DATA
@@ -158,6 +168,7 @@ export default {
       }
       return false;
     },
+    //This returns true if no filter is set at all
     noFilterSet() {
       if(Vue.prototype.$shownLabels.length === 0) {
         //NO LABEL FILTERED
@@ -167,6 +178,8 @@ export default {
         }
       }
     },
+    //This methode is used on loading the item data to get the labelPos information
+    // so input looks like this: [0,0,0,1,0] and the first 1 is located and returned
     getLabelPos(input) {
       if(input[0] === 1) {
         return 0;
@@ -182,6 +195,7 @@ export default {
         return -1;
       }
     },
+    //This methode is called by the key filter check and draws the keyword with a RegularExpression
     highlightText() {
       return this.text.replace(new RegExp(Vue.prototype.$searchKeyWord, "gi"), match => {
         return '<a style="background-color: lightcyan">' + match + '</a>';
